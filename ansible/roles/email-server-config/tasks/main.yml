@@ -1,0 +1,84 @@
+---
+- name: Install required packages
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ required_packages }}'
+
+- name: Remove any exisitng postfix configs
+  file:
+    path: "/etc/postfix/{{ item }}"
+    state: absent
+  with_items: '{{ postfix_config }}'
+
+- name: Install postfix config configs
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/postfix/{{ item }}"
+    mode: 0644
+  with_items: '{{ postfix_config }}' 
+
+- name: Remove any exisitng opendkim configs
+  file:
+    path: "{{ opendkim_config_path }}"
+    state: absent
+
+- name: Install opendkim.conf
+  copy:
+    src: "{{ opendkim_conf }}"
+    dest: "{{ opendkim_config_path }}"
+    mode: 0644
+
+- name: Create required directories
+  file:
+    path: "{{ item[0] }}"
+    state: directory
+    owner: '{{ item[1] }}'
+    group: '{{ item[2] }}'
+    mode: 0750
+  loop: "{{ required_dirs|product(users, user_groups)|list }}"
+
+- name: Create ch-mail.private file
+  file:
+    path: "{{ item[0] }}"
+    state: touch
+    owner: '{{ item[1] }}'
+    group: '{{ item[2] }}'
+    mode: 0600
+  loop: "{{ ch_mail_private_file|product(users, user_groups)|list }}"
+
+- name: Add config to opendkim KeyTable
+  lineinfile:
+    path: "{{ key_table_path }}"
+    line: '{{ item }}'
+  with_items: '{{ key_table_config }}'
+
+- name: Add config to opendkim SigningTable
+  lineinfile:
+    path: "{{ signing_table_path }}"
+    line: '{{ item }}'
+  with_items: '{{ signing_table_config }}'
+
+#- name: Install opendkim configs
+  #copy:
+    #src: "{{ item[0] }}"
+    #dest: "/etc/{{ item[0] }}"
+    #owner: '{{ item[1] }}'
+    #group: '{{ item[2] }}'
+    #mode: 0644
+  #loop: "{{ http_config|product(users, user_groups)|list }}"
+
+- name: Change permissions for disclaimer
+  command: chmod 750 "{{ disclaimer_path }}"
+
+- name: Ensure postfix is started and enabled at boot.
+  service:
+    name: postfix
+    state: "{{ service_state }}"
+    enabled: "{{ service_enabled }}"
+
+- name: Ensure opendkim is started and enabled at boot.
+  service:
+    name: opendkim
+    state: "{{ service_state }}"
+    enabled: "{{ service_enabled }}"

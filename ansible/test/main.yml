@@ -1,0 +1,24 @@
+---
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory:
+      - name: smtp-outbound
+        image: "geerlingguy/docker-centos7-ansible"
+  roles:
+    - role: provision_docker
+      provision_docker_inventory: "{{ inventory }}"
+      provision_docker_privileged: True
+
+- name: Setup docker pre-reqs
+  hosts: smtp-outbound
+  become: true
+  tasks:
+    - name: Install openssh
+      package:
+        name: openssh-server
+        state: present
+
+- import_playbook: ../playbook.yml
+

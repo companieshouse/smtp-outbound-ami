@@ -1,0 +1,40 @@
+---
+required_packages: 
+  - postfix 
+  - mailx
+  - sendmail-milter
+  - altermime
+  - opendkim
+
+postfix_config:
+  - main.cf 
+  - master.cf 
+  - disclaimer
+  - disclaimer.txt
+
+opendkim_config_path: /etc/opendkim.conf
+opendkim_conf: '{{ opendkim_config_path | basename }}'
+
+users: 
+  - opendkim
+
+user_groups: 
+  - opendkim
+
+service_state: started
+service_enabled: true
+
+required_dirs: 
+  - /etc/opendkim/keys/companieshouse.gov.uk
+  - /var/spool/filter 
+
+ch_mail_private_file:
+  - /etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private
+
+key_table_path: /etc/opendkim/KeyTable
+key_table_config: ch-mail._domainkey.companieshouse.gov.uk companieshouse.gov.uk:ch-mail:/etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private
+
+signing_table_path: /etc/opendkim/SigningTable
+signing_table_config: "*@companieshouse.gov.uk ch-mail._domainkey.companieshouse.gov.uk"
+
+disclaimer_path: /etc/postfix/disclaimer
