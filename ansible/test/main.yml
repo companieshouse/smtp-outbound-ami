@@ -6,6 +6,11 @@
     inventory:
       - name: smtp-outbound
         image: "geerlingguy/docker-centos7-ansible"
+        # The network setting allows for idempotent testing.
+        # without it the role creates a brand new container, with it the container is re-used.
+        # network_mode: bridge
+        provision_docker_volumes: 
+          - /lib/modules:/lib/modules
   roles:
     - role: provision_docker
       provision_docker_inventory: "{{ inventory }}"
@@ -14,11 +19,6 @@
 - name: Setup docker pre-reqs
   hosts: smtp-outbound
   become: true
-  tasks:
-    - name: Install openssh
-      package:
-        name: openssh-server
-        state: present
 
 - import_playbook: ../playbook.yml
 
