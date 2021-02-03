@@ -5,38 +5,109 @@
     state: present
   with_items: '{{ required_packages }}'
 
-- name: Remove any exisitng postfix configs
-  file:
-    path: "/etc/postfix/{{ item }}"
-    state: absent
-  with_items: '{{ postfix_config }}'
+- name: Update main.cf Postfix configuration after comments entry
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.name }} = {{ item.value }}"
+    regexp: "^#{{ item.name }} ="
+    insertafter: "^#{{ item.name }} ="
+  with_items:
+    - name: "myorigin"
+      value: "{{ postfix_myorigin }}"
+    - name: "mydomain"
+      value: "{{ postfix_mydomain }}"
+    - name: "mynetworks"
+      value: "{{ postfix_mynetworks }}"
+    - name: "relayhost"
+      value: "{{ postfix_relayhost }}"
+    - name: "header_checks"
+      value: "{{ postfix_header_checks }}"
+    - name: smtp_tls_security_level
+      value: "{{ postfix_smtp_tls_security_level }}"
+    - name: smtp_tls_CAfile
+      value: "{{ postfix_smtp_tls_CAfile }}"
+    - name: milter_protocol
+      value: "{{ postfix_milter_protocol }}"
+    - name: milter_default_action
+      value: "{{ postfix_milter_default_action }}"
+    - name: smtpd_milters
+      value: "{{ postfix_smtpd_milters }}"
+    - name: non_smtpd_milters
+      value: "{{ postfix_non_smtpd_milters }}"
 
-- name: Install postfix config configs
+- name: Update main.cf Postfix configuration without comment entry
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_main_config_file }}"
+    line: "{{ item.name }} = {{ item.value }}"
+    regexp: "^{{ item.name }} ="
+  with_items:
+    - name: inet_interfaces
+      value: "{{ postfix_inet_interfaces }}"
+    - name: inet_protocols
+      value: "{{ postfix_inet_protocols }}"
+
+- name: Update master.cf smtp Postfix configuration.
+  lineinfile:
+    dest: "/etc/postfix/{{ postfix_master_config_file }}"
+    line: '{{ item }}'
+    regexp: '^smtp      inet'
+    insertbefore: '^#smtp      inet'
+  with_items: '{{ postfix_content_filter }}'
+
+- name: Update master.cf dfilt Postfix configuration.
+  lineinfile:
+    path: "/etc/postfix/{{ postfix_master_config_file }}"
+    line: '{{ item }}'
+  with_items: '{{ postfix_dfilt }}'
+
+- name: Install postfix disclaimer configs
   copy:
     src: "{{ item }}"
     dest: "/etc/postfix/{{ item }}"
     mode: 0644
-  with_items: '{{ postfix_config }}' 
+  with_items: '{{ postfix_disclaimer_config }}' 
 
-- name: Remove any exisitng opendkim configs
-  file:
-    path: "{{ opendkim_config_path }}"
-    state: absent
-
-- name: Install opendkim.conf
-  copy:
-    src: "{{ opendkim_conf }}"
+- name: Update opendkim.conf configuration without comments entry
+  lineinfile:
     dest: "{{ opendkim_config_path }}"
-    mode: 0644
+    line: "{{ item.name }}{{ item.value }}"
+    regexp: "^{{ item.name }}"
+  with_items:
+    - name: Mode
+      value: "{{ opendkim_mode }}"
+    - name: Socket
+      value: "{{ opendkim_socket }}"
+    - name: KeyFile
+      value: "{{ opendkim_keyfile }}"
 
-- name: Create required directories
+- name: Update opendkim.conf configuration after comments entry
+  lineinfile:
+    dest: "{{ opendkim_config_path }}"
+    line: "{{ item.name }}{{ item.value }}"
+    regexp: "^# {{ item.name }}"
+    insertafter: "^# {{ item.name }}"
+  with_items:
+    - name: KeyTable
+      value: "{{ opendkim_keytable }}"
+    - name: SigningTable
+      value: "{{ opendkim_signingtable }}"
+    - name: SignatureAlgorithm
+      value: "{{ opendkim_signaturealgorithm }}"
+
+- name: Create /var/spool/filter directory
+  file:
+    path: "{{ spool_filter_dir }}"
+    state: directory
+    mode: 0750
+
+- name: Create keys directory
   file:
     path: "{{ item[0] }}"
     state: directory
     owner: '{{ item[1] }}'
     group: '{{ item[2] }}'
     mode: 0750
-  loop: "{{ required_dirs|product(users, user_groups)|list }}"
+  loop: "{{ keys_dir|product(users, user_groups)|list }}"
 
 - name: Create ch-mail.private file
   file:
@@ -51,7 +122,7 @@
   lineinfile:
     path: "{{ key_table_path }}"
     line: '{{ item }}'
-  with_items: '{{ key_table_config }}'
+  with_items: "{{ key_table_config }}"
 
 - name: Add config to opendkim SigningTable
   lineinfile:
@@ -59,17 +130,10 @@
     line: '{{ item }}'
   with_items: '{{ signing_table_config }}'
 
-#- name: Install opendkim configs
-  #copy:
-    #src: "{{ item[0] }}"
-    #dest: "/etc/{{ item[0] }}"
-    #owner: '{{ item[1] }}'
-    #group: '{{ item[2] }}'
-    #mode: 0644
-  #loop: "{{ http_config|product(users, user_groups)|list }}"
-
 - name: Change permissions for disclaimer
-  command: chmod 750 "{{ disclaimer_path }}"
+  file:
+    path: "{{ disclaimer_path }}"
+    mode: 0750
 
 - name: Ensure postfix is started and enabled at boot.
   service:
