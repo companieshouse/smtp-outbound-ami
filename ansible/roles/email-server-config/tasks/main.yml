@@ -60,6 +60,12 @@
     line: '{{ item }}'
   with_items: '{{ postfix_dfilt }}'
 
+- name: Update header checks Postfix configuration.
+  lineinfile:
+    path: "/etc/postfix/{{ postfix_header_checks_config_file }}"
+    line: '{{ item }}'
+  with_items: '{{ postfix_header_checks }}'
+
 - name: Install postfix disclaimer configs
   copy:
     src: "{{ item }}"

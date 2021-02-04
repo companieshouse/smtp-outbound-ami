@@ -68,3 +68,10 @@ opendkim_keyfile: " /etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private"
 opendkim_keytable: "        /etc/opendkim/KeyTable" 
 opendkim_signingtable: "    refile:/etc/opendkim/SigningTable" 
 opendkim_signaturealgorithm: "      rsa-sha256" 
+
+postfix_header_checks_config_file: header_checks
+
+postfix_header_checks:
+  - "/^Received:.*/      IGNORE"
+  - "/Message-ID:(.*)@(.*)>(.*)/ REPLACE Message-ID:$1@companieshouse.gov.uk>$3"
+  - "/Message-Id:(.*)@(.*)>(.*)/ REPLACE Message-Id:$1@companieshouse.gov.uk>$3"
