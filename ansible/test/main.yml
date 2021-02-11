@@ -1,0 +1,24 @@
+---
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory:
+      - name: smtp-outbound
+        image: "geerlingguy/docker-centos7-ansible"
+        # The network setting allows for idempotent testing.
+        # without it the role creates a brand new container, with it the container is re-used.
+        # network_mode: bridge
+        provision_docker_volumes: 
+          - /lib/modules:/lib/modules
+  roles:
+    - role: provision_docker
+      provision_docker_inventory: "{{ inventory }}"
+      provision_docker_privileged: True
+
+- name: Setup docker pre-reqs
+  hosts: smtp-outbound
+  become: true
+
+- import_playbook: ../playbook.yml
+

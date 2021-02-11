@@ -1,0 +1,77 @@
+---
+required_packages: 
+  - postfix 
+  - mailx
+  - sendmail-milter
+  - altermime
+  - opendkim
+
+postfix_main_config_file: main.cf
+postfix_master_config_file: master.cf 
+
+postfix_disclaimer_config:
+  - disclaimer
+  - disclaimer.txt
+
+opendkim_config_path: /etc/opendkim.conf
+
+users: 
+  - opendkim
+
+user_groups: 
+  - opendkim
+
+service_state: started
+service_enabled: true
+
+keys_dir: 
+  - /etc/opendkim/keys/companieshouse.gov.uk
+
+spool_filter_dir: /var/spool/filter 
+
+ch_mail_private_file:
+  - /etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem
+
+key_table_path: /etc/opendkim/KeyTable
+key_table_config: "aws_shared_services.companieshouse.gov.uk:aws_shared_services:/etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem"
+
+signing_table_path: /etc/opendkim/SigningTable
+signing_table_config: "*@companieshouse.gov.uk aws_shared_services._domainkey.companieshouse.gov.uk"
+
+disclaimer_path: /etc/postfix/disclaimer
+
+postfix_myorigin: $mydomain
+postfix_mydomain: companieshouse.gov.uk
+postfix_inet_interfaces: all 
+postfix_inet_protocols: ipv4 
+postfix_mynetworks: 10.44.0.0/24, 10.44.1.0/24, 10.44.2.0/24 
+postfix_relayhost: cust402-s.out.mailcontrol.com 
+postfix_header_checks: regexp:/etc/postfix/header_checks 
+postfix_smtp_tls_security_level: may 
+postfix_smtp_tls_CAfile: /etc/pki/tls/certs/ca-bundle.crt 
+postfix_milter_protocol: 2 
+postfix_milter_default_action: accept 
+postfix_smtpd_milters: inet:localhost:8891 
+postfix_non_smtpd_milters: inet:localhost:8891 
+
+postfix_content_filter: 
+  - "smtp       inet  n       -       n       -       -       smtpd"
+  - "  -o content_filter=dfilt:"
+
+postfix_dfilt: 
+  - "dfilt   unix    -       n       n       -       -       pipe"
+  - "  flags=Rq user=filter argv=/etc/postfix/disclaimer -f ${sender} -- ${recipient}"
+
+opendkim_mode: "    sv" 
+opendkim_socket: "  inet:8891@localhost" 
+opendkim_keyfile: " /etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem" 
+opendkim_keytable: "        /etc/opendkim/KeyTable" 
+opendkim_signingtable: "    refile:/etc/opendkim/SigningTable" 
+opendkim_signaturealgorithm: "      rsa-sha256" 
+
+postfix_header_checks_config_file: header_checks
+
+postfix_header_checks:
+  - "/^Received:.*/      IGNORE"
+  - "/Message-ID:(.*)@(.*)>(.*)/ REPLACE Message-ID:$1@companieshouse.gov.uk>$3"
+  - "/Message-Id:(.*)@(.*)>(.*)/ REPLACE Message-Id:$1@companieshouse.gov.uk>$3"
