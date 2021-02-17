@@ -30,13 +30,13 @@ keys_dir:
 spool_filter_dir: /var/spool/filter 
 
 ch_mail_private_file:
-  - /etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private
+  - /etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem
 
 key_table_path: /etc/opendkim/KeyTable
-key_table_config: "ch-mail._domainkey.companieshouse.gov.uk companieshouse.gov.uk:ch-mail:/etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private"
+key_table_config: "aws_shared_services.companieshouse.gov.uk:aws_shared_services:/etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem"
 
 signing_table_path: /etc/opendkim/SigningTable
-signing_table_config: "*@companieshouse.gov.uk ch-mail._domainkey.companieshouse.gov.uk"
+signing_table_config: "*@companieshouse.gov.uk aws_shared_services._domainkey.companieshouse.gov.uk"
 
 disclaimer_path: /etc/postfix/disclaimer
 
@@ -44,9 +44,9 @@ postfix_myorigin: $mydomain
 postfix_mydomain: companieshouse.gov.uk
 postfix_inet_interfaces: all 
 postfix_inet_protocols: ipv4 
-postfix_mynetworks: 10.44.0.0/24, 10.44.1.0/24, 10.44.2.0/24 
+postfix_mynetworks: 10.44.0.0/16,10.84.0.0/16,10.94.0.0/16,10.104.0.0/16
 postfix_relayhost: cust402-s.out.mailcontrol.com 
-postfix_header_checks: regexp:/etc/postfix/header_checks 
+postfix_header_checks_main_cf: regexp:/etc/postfix/header_checks
 postfix_smtp_tls_security_level: may 
 postfix_smtp_tls_CAfile: /etc/pki/tls/certs/ca-bundle.crt 
 postfix_milter_protocol: 2 
@@ -64,7 +64,7 @@ postfix_dfilt:
 
 opendkim_mode: "    sv" 
 opendkim_socket: "  inet:8891@localhost" 
-opendkim_keyfile: " /etc/opendkim/keys/companieshouse.gov.uk/ch-mail.private" 
+opendkim_keyfile: " /etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem" 
 opendkim_keytable: "        /etc/opendkim/KeyTable" 
 opendkim_signingtable: "    refile:/etc/opendkim/SigningTable" 
 opendkim_signaturealgorithm: "      rsa-sha256" 
