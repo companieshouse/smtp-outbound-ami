@@ -44,9 +44,9 @@ postfix_myorigin: $mydomain
 postfix_mydomain: companieshouse.gov.uk
 postfix_inet_interfaces: all 
 postfix_inet_protocols: ipv4 
-postfix_mynetworks: 10.44.0.0/24, 10.44.1.0/24, 10.44.2.0/24 
+postfix_mynetworks: 10.44.0.0/16,10.84.0.0/16,10.94.0.0/16,10.104.0.0/16
 postfix_relayhost: cust402-s.out.mailcontrol.com 
-postfix_header_checks: regexp:/etc/postfix/header_checks 
+postfix_header_checks_main_cf: regexp:/etc/postfix/header_checks
 postfix_smtp_tls_security_level: may 
 postfix_smtp_tls_CAfile: /etc/pki/tls/certs/ca-bundle.crt 
 postfix_milter_protocol: 2 

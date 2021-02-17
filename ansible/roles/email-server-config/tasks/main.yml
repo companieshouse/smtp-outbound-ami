@@ -21,7 +21,7 @@
     - name: "relayhost"
       value: "{{ postfix_relayhost }}"
     - name: "header_checks"
-      value: "{{ postfix_header_checks }}"
+      value: "{{ postfix_header_checks_main_cf }}"
     - name: smtp_tls_security_level
       value: "{{ postfix_smtp_tls_security_level }}"
     - name: smtp_tls_CAfile
