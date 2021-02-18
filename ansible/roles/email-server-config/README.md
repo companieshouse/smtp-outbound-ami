@@ -3,6 +3,6 @@
 Install postfix, mailx, sendmail-milter, altermime and opendkim
 Setup directories and users as required.
 
-Configure Postfix and Opendkim config files
+Configure Postfix and Opendkim config files.
 
-Enable and start postfix and opendkim
+Enable and start postfix and opendkim.
