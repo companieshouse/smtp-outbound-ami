@@ -33,7 +33,7 @@ ch_mail_private_file:
   - /etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem
 
 key_table_path: /etc/opendkim/KeyTable
-key_table_config: "aws_shared_services.companieshouse.gov.uk:aws_shared_services:/etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem"
+key_table_config: "aws_shared_services._domainkey.companieshouse.gov.uk companieshouse.gov.uk:aws_shared_services:/etc/opendkim/keys/companieshouse.gov.uk/aws_shared_services.pem"
 
 signing_table_path: /etc/opendkim/SigningTable
 signing_table_config: "*@companieshouse.gov.uk aws_shared_services._domainkey.companieshouse.gov.uk"
