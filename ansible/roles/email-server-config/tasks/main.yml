@@ -5,6 +5,9 @@
     state: present
   with_items: '{{ required_packages }}'
 
+- name: Add filter user
+  command: useradd -r -c "Postfix Filters" -d /var/spool/filter filter
+
 - name: Update main.cf Postfix configuration after comments entry
   lineinfile:
     dest: "/etc/postfix/{{ postfix_main_config_file }}"
@@ -104,6 +107,8 @@
   file:
     path: "{{ spool_filter_dir }}"
     state: directory
+    owner: filter
+    group: filter
     mode: 0750
 
 - name: Create keys directory
@@ -139,6 +144,7 @@
 - name: Change permissions for disclaimer
   file:
     path: "{{ disclaimer_path }}"
+    group: filter
     mode: 0750
 
 - name: Ensure postfix is started and enabled at boot.
