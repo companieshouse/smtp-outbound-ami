@@ -147,6 +147,20 @@
     group: filter
     mode: 0750
 
+- name: Install disclaimer compiled file for selinux policy to allow disclaimer script to run
+  copy:
+    src: "{{ disclaimer_compiled_file }}"
+    dest: "/tmp/{{ disclaimer_compiled_file }}"
+    mode: 0644
+
+- name: Run selinux policy load on disclaimer compiled file
+  command: semodule -i /tmp/disclaimer.pp
+
+- name: Remove disclaimer compiled file
+  ansible.builtin.file:
+    path: "/tmp/{{ disclaimer_compiled_file }}"
+    state: absent
+
 - name: Ensure postfix is started and enabled at boot.
   service:
     name: postfix
