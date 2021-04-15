@@ -1,9 +1,9 @@
----  
 - name: AMI Build
   hosts: smtp-outbound
   become: true
   gather_facts: yes
   roles:
-    - role: epel
-    - role: email-server-config
+    - ch_collections.base.nagios_nrpe_client
+    - epel
+    - email-server-config
 
