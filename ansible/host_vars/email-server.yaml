@@ -21,12 +21,15 @@ nrpe_command:
     script: check_load
     option: $ARG1$
   check_sshd:
+    sudo: true
     script: check_service.sh
     option: $ARG1$
   check_postfix:
+    sudo: true
     script: check_service.sh
     option: $ARG1$
-  check_rsyslogd:
+  check_syslogd:
+    sudo: true
     script: check_service.sh
     option: $ARG1$
   check_users:
