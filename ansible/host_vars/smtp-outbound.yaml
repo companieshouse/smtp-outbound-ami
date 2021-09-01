@@ -36,3 +36,6 @@ nrpe_command:
   check_users:
     script: check_users
     option: $ARG1$
+  check_mailq:
+    script: check_mailq
+    option: $ARG1$
