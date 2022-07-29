@@ -172,3 +172,16 @@
     name: opendkim
     state: "{{ service_state }}"
     enabled: "{{ service_enabled }}"
+
+- name: Copy syslog file over with owner and permissions. 
+  ansible.builtin.copy:
+    src: syslog
+    dest: /etc/logrotate.d/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart rsyslog. 
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted
