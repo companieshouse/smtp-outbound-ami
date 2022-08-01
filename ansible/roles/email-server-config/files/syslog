@@ -8,7 +8,7 @@
     create
     start 0
     postrotate
-        ls /var/log/maillog*.gz | xargs -I {} mv {} (hostname)_{}
+        ls /var/log/maillog*.gz | xargs -I {} mv {} (hostname)-{}
         aws s3 mv /var/log/ s3://shared-services.eu-west-2.smtplog.ch.gov.uk --recursive --exclude "*" --include "*maillog-*"
         /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
     endscript
