@@ -185,3 +185,38 @@
   ansible.builtin.service:
     name: rsyslog
     state: restarted
+
+- name: Install unzip.
+  package:
+    name: unzip
+    state: latest
+
+- name: Check if AWS ClI executable exists.
+  stat: 
+    path: /usr/local/bin/aws
+  register: aws_cli_stat
+
+- name: "Get and install AWS CLI".
+  block:
+    - name: Download AWS CLI.
+      ansible.builtin.get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscli-exe-linux-x86_64.zip
+        mode: '0644'
+
+    - name: Extract AWS CLIv2 zip.
+      ansible.builtin.unarchive:
+        src: /tmp/awscli-exe-linux-x86_64.zip
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Install AWS CLIv2.
+      ansible.builtin.command: sh /tmp/aws/install
+      args:
+        creates: /usr/local/bin/aws
+  when: (aws_cli_stat.stat.exists == false) or (update_aws_cli)
+
+- name: Remove unzip.
+  package: 
+    name: unzip
+    state: absent
