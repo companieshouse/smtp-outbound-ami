@@ -9,7 +9,7 @@
     start 0
     postrotate
         for file in $(ls /var/log/maillog-*); do mv "$file" /var/log/$(hostname -s).$(basename "$file"); done
-        aws s3 mv --sse='AES256' /var/log/ s3://shared-services.eu-west-2.smtplog.ch.gov.uk --recursive --exclude "*" --include "*maillog-*"
+        aws s3 mv --sse='AES256' /var/log/ s3://shared-services.eu-west-2.smtplog.ch.gov.uk --recursive --exclude "*" --include "*maillog-*.gz"
         /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
     endscript
 }
