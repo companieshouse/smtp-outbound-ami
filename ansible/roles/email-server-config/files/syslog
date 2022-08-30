@@ -12,7 +12,7 @@
         /home/ssm-user/maillog-rotate.sh
     endscript
 }
-/var/log/messagesgit 
+/var/log/messages
 /var/log/secure
 /var/log/spooler
 {
