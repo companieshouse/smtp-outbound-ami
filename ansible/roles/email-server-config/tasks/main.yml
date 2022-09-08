@@ -186,14 +186,6 @@
     name: rsyslog
     state: restarted
 
-- name: Copy maillog rotate script over with owner and permissions. 
-  ansible.builtin.copy:
-    src: maillog-rotate.sh
-    dest: /home/ssm-user/
-    owner: root
-    group: root
-    mode: '0744'
-
 - name: Install unzip.
   package:
     name: unzip
