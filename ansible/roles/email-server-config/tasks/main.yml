@@ -5,6 +5,9 @@
     state: present
   with_items: '{{ required_packages }}'
 
+- name: Set selinux boolean
+  command: setsebool -P nis_enabled 1
+
 - name: Add filter user
   command: useradd -r -c "Postfix Filters" -d /var/spool/filter filter
 
