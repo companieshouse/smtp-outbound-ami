@@ -1,8 +1,9 @@
 ---
-- name: Copy amazon-cloudwatch-agent.json template
-  copy:
-    src: ./ansible/template/amazon-cloudwatch-agent.json
-    dest: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent.json
+
+- name: Copy cloudwatch file over with owner and permissions. 
+  ansible.builtin.copy:
+    src: amazon-cloudwatch-agent.json
+    dest: /opt/aws/amazon-cloudwatch-agent/bin/
     owner: root
     group: root
     mode: '0644'
