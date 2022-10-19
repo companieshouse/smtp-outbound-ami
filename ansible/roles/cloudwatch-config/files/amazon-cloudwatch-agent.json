@@ -11,36 +11,48 @@
 				"collect_list": [
 					{
 						"file_path": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
-						"log_group_name": "/ec2/CloudWatchAgentLog/",
+						"log_group_name": "/smtp-outbound-logs/CloudWatchAgentLog/",
 						"log_stream_name": "{instance_id}_{hostname}",
-            "timezone": "Local"
+						"retention_in_days": "7",
+                        "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/dmesg",
-						"log_group_name": "/ec2/var/log/dmesg",
+						"log_group_name": "/smtp-outbound-logs/var/log/dmesg",
 						"log_stream_name": "{instance_id}_{hostname}",
-            "timezone": "Local"
+						"retention_in_days": "7",
+                        "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/auth.log",
-						"log_group_name": "/ec2/var/log/auth.log",
+						"log_group_name": "/smtp-outbound-logs/var/log/auth.log",
 						"log_stream_name": "{instance_id}_{hostname}",
-            "timezone": "Local"
+						"retention_in_days": "7",
+                        "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/apt/history.log",
-						"log_group_name": "/ec2/var/log/apt/history.log",
+						"log_group_name": "/smtp-outbound-logs/var/log/apt/history.log",
 						"log_stream_name": "{instance_id}_{hostname}",
-            "timezone": "Local"
+						"retention_in_days": "7",
+                        "timezone": "Local"
+
+					},
+					{
+						"file_path": "/var/log/maillog",
+						"log_group_name": "/smtp-outbound-logs/var/log/maillog",
+						"log_stream_name": "{instance_id}_{hostname}",
+						"retention_in_days": "7",
+                        "timezone": "Local"
 
 					}
 				]
 			}
 		},
-    "log_stream_name": "/ec2/catchall"
+    "log_stream_name": "/smtp-outbound-logs/catchall"
 	},
 
   "metrics": {
