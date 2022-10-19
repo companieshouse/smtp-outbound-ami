@@ -1,7 +1,7 @@
 ---
 - name: Copy amazon-cloudwatch-agent.json template
   copy:
-    src: ./template/amazon-cloudwatch-agent.json
+    src: ./ansible/template/amazon-cloudwatch-agent.json
     dest: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent.json
     owner: root
     group: root
