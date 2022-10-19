@@ -6,4 +6,5 @@
     - ch_collections.base.nagios_nrpe_client
     - epel
     - email-server-config
+    - cloudwatch-config
 
