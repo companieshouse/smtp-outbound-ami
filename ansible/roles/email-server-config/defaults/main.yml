@@ -53,6 +53,7 @@ postfix_milter_protocol: 2
 postfix_milter_default_action: accept 
 postfix_smtpd_milters: inet:localhost:8891 
 postfix_non_smtpd_milters: inet:localhost:8891 
+postfix_message_size_limit: 51200000
 
 postfix_content_filter: 
   - "smtp       inet  n       -       n       -       -       smtpd"
