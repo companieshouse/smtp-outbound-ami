@@ -40,6 +40,8 @@
       value: "{{ postfix_smtpd_milters }}"
     - name: non_smtpd_milters
       value: "{{ postfix_non_smtpd_milters }}"
+    - name: message_size_limit
+      value: "{{ postfix_message_size_limit }}"
 
 - name: Update main.cf Postfix configuration without comment entry
   lineinfile:
