@@ -11,40 +11,40 @@
 				"collect_list": [
 					{
 						"file_path": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log",
-						"log_group_name": "/smtp-outbound-logs/CloudWatchAgentLog/",
-						"log_stream_name": "{instance_id}_{hostname}",
+						"log_group_name": "logs-smtp-outbound",
+						"log_stream_name": "{instance_id}_{hostname}_CloudWatchAgentLog",
 						"retention_in_days": 7,
                         "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/dmesg",
-						"log_group_name": "/smtp-outbound-logs/var/log/dmesg",
-						"log_stream_name": "{instance_id}_{hostname}",
+						"log_group_name": "logs-smtp-outbound",
+						"log_stream_name": "{instance_id}_{hostname}_dmesg",
 						"retention_in_days": 7,
                         "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/auth.log",
-						"log_group_name": "/smtp-outbound-logs/var/log/auth.log",
-						"log_stream_name": "{instance_id}_{hostname}",
+						"log_group_name": "logs-smtp-outbound",
+						"log_stream_name": "{instance_id}_{hostname}_auth.log",
 						"retention_in_days": 7,
                         "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/apt/history.log",
-						"log_group_name": "/smtp-outbound-logs/var/log/apt/history.log",
-						"log_stream_name": "{instance_id}_{hostname}",
+						"log_group_name": "logs-smtp-outbound",
+						"log_stream_name": "{instance_id}_{hostname}_history.log",
 						"retention_in_days": 7,
                         "timezone": "Local"
 
 					},
 					{
 						"file_path": "/var/log/maillog",
-						"log_group_name": "/smtp-outbound-logs/var/log/maillog",
-						"log_stream_name": "{instance_id}_{hostname}",
+						"log_group_name": "logs-smtp-outbound",
+						"log_stream_name": "{instance_id}_{hostname}_maillog",
 						"retention_in_days": 7,
                         "timezone": "Local"
 
@@ -52,7 +52,7 @@
 				]
 			}
 		},
-    "log_stream_name": "/smtp-outbound-logs/catchall"
+    "log_stream_name": "/logs-smtp-outbound/catchall"
 	},
 
   "metrics": {
