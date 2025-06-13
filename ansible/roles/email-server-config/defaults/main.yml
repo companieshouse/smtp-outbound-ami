@@ -78,3 +78,16 @@ postfix_header_checks:
   - "/Message-Id:(.*)@(.*)>(.*)/ REPLACE Message-Id:$1@companieshouse.gov.uk>$3"
 
 disclaimer_compiled_file: disclaimer.pp
+
+postfix_transport_maps_file: "hash:/etc/postfix/transport"
+
+postfix_transport_maps:
+ - "ipo.gov.uk smtp:[ipo-gov-uk.mail.protection.outlook.com]"
+
+postfix_sender_dependent_relayhost_maps_file: "hash:/etc/postfix/sender_dependent_relayhost"
+
+postfix_sender_dependent_relayhost_maps:
+ - "purchaseorders@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
+ - "customeraccounts@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
+ - "information@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
+ - "payables@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"

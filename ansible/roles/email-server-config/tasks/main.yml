@@ -42,6 +42,10 @@
       value: "{{ postfix_non_smtpd_milters }}"
     - name: message_size_limit
       value: "{{ postfix_message_size_limit }}"
+    - name: transport_maps
+      value: "{{ postfix_transport_maps_file }}"
+    - name: sender_dependent_relayhost_maps
+      value: "{{ postfix_sender_dependent_relayhost_maps_file }}"
 
 - name: Update main.cf Postfix configuration without comment entry
   lineinfile:
@@ -73,6 +77,24 @@
     path: "/etc/postfix/{{ postfix_header_checks_config_file }}"
     line: '{{ item }}'
   with_items: '{{ postfix_header_checks }}'
+
+- name: Update transport Postfix configuration.
+  lineinfile:
+    path: "/etc/postfix/{{ postfix_transport_maps_file }}"
+    line: '{{ item }}'
+  with_items: '{{ postfix_transport_maps }}'
+
+- name: Postmap postfix_transport_maps.
+  command: postmap "hash:/etc/postfix/transport"
+
+- name: Update sender sender dependent relayhost Postfix configuration.
+  lineinfile:
+    path: "/etc/postfix/{{ postfix_sender_dependent_relayhost_maps_file }}"
+    line: '{{ item }}'
+  with_items: '{{ postfix_sender_dependent_relayhost_maps }}'  
+
+- name: Postmap sender_dependent_relayhost_maps.
+  command: postmap "hash:/etc/postfix/sender_dependent_relayhost"
 
 - name: Install postfix disclaimer configs
   copy:
