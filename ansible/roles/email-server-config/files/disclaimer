@@ -18,7 +18,7 @@ trap "rm -f in.$$" 0 1 2 3 15
 cd $INSPECT_DIR || { echo $INSPECT_DIR does not exist; exit
 $EX_TEMPFAIL; }
 
-echo in.$$ > /var/tmp/disclaimer.log
+#echo in.$$ > /var/tmp/disclaimer.log
 
 cat >in.$$ || { echo Cannot save mail to file; exit $EX_TEMPFAIL; }
 
