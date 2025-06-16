@@ -18,27 +18,26 @@ trap "rm -f in.$$" 0 1 2 3 15
 cd $INSPECT_DIR || { echo $INSPECT_DIR does not exist; exit
 $EX_TEMPFAIL; }
 
-#echo in.$$ > /var/tmp/disclaimer.log
+echo in.$$ > /var/tmp/disclaimer.log
 
 cat >in.$$ || { echo Cannot save mail to file; exit $EX_TEMPFAIL; }
 
 # Obtain From address domain
-from_address=`grep -m 1 “From:” in.$$ | cut -f2 -d "@" | cut -d ">" -f1`
+from_address=`grep -m 1 "^From:" in.$$ | cut -f2 -d "@" | cut -d ">" -f1`
 
-# If the from address matches ch then apply the appropiate disclaimed
-if [ `grep -wi ^${from_address}$ ${disclaimer_addresses_ch}` ]; then
-/usr/bin/altermime –input=in.$$
-–disclaimer-html=/etc/postfix/disclaimer_ch.txt ||
-{ echo Message content rejected; exit $EX_UNAVAILABLE; }
-
-# If the from address matches ipo then apply the appropiate disclaimed
-if [ `grep -wi ^${from_address}$ ${disclaimer_addresses_ipo}` ]; then
-/usr/bin/altermime –input=in.$$
-–disclaimer-html=/etc/postfix/disclaimer_ipo.txt ||
-{ echo Message content rejected; exit $EX_UNAVAILABLE; }
-
+if [ `grep -wi ${from_address} ${disclaimer_addresses_ch}` ]; then
+/usr/bin/altermime --input=in.$$ \
+                   --disclaimer=/etc/postfix/disclaimer_ch.txt \
+                   --disclaimer-html=/etc/postfix/disclaimer_ch.txt || \
+                    { echo Message content rejected; exit $EX_UNAVAILABLE; }
 fi
 
+if [ `grep -wi ${from_address} ${disclaimer_addresses_ipo}` ]; then
+/usr/bin/altermime --input=in.$$ \
+                   --disclaimer=/etc/postfix/disclaimer_ipo.txt \
+                   --disclaimer-html=/etc/postfix/disclaimer_ipo.txt || \
+                    { echo Message content rejected; exit $EX_UNAVAILABLE; }
+fi
 $SENDMAIL "$@" <in.$$
 
 exit $?
