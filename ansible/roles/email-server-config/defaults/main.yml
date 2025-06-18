@@ -89,5 +89,5 @@ postfix_sender_dependent_relayhost_maps_file: "hash:/etc/postfix/sender_dependen
 postfix_sender_dependent_relayhost_maps:
  - "purchaseorders@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
  - "customeraccounts@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
- - "information@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
  - "payables@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
+ - "financesystems@ipo.gov.uk ipo-gov-uk.mail.protection.outlook.com"
